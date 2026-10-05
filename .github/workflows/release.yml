@@ -1,0 +1,109 @@
+# Gera o instalador do app desktop (Windows) e publica numa Release do GitHub.
+# Dispara ao enviar uma tag de versão: git tag v0.2.0 && git push origin v0.2.0
+# A tag precisa ser igual à versão do package.json (com "v" na frente).
+
+name: Release desktop
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  criar-release:
+    name: Criar rascunho da release
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.criar.outputs.result }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Conferir tag e versão
+        run: |
+          versao="v$(node -p "require('./package.json').version")"
+          if [ "$versao" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::A tag $GITHUB_REF_NAME não bate com a versão do package.json ($versao)."
+            exit 1
+          fi
+
+      - id: criar
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const tag = context.ref.replace('refs/tags/', '')
+            // Reaproveita o rascunho de uma execução anterior da mesma tag (ex.: depois de uma falha).
+            const releases = await github.paginate(github.rest.repos.listReleases, context.repo)
+            const anterior = releases.find((r) => r.tag_name === tag)
+            if (anterior && !anterior.draft) throw new Error(`A release ${tag} já foi publicada.`)
+            if (anterior) {
+              for (const asset of anterior.assets) {
+                await github.rest.repos.deleteReleaseAsset({ ...context.repo, asset_id: asset.id })
+              }
+              return anterior.id
+            }
+            const { data } = await github.rest.repos.createRelease({
+              ...context.repo,
+              tag_name: tag,
+              name: `Proof of Study ${tag}`,
+              draft: true,
+              generate_release_notes: true,
+              body: [
+                '## Como instalar',
+                '',
+                'Baixe o instalador do Windows em **Assets**, logo abaixo. Não precisa compilar nada.',
+                '',
+                '- **Instalador:** o arquivo terminado em `_x64-setup.exe`.',
+                '- **Aviso do SmartScreen:** o instalador não é assinado, então o Windows pode avisar na primeira vez. Clique em **Mais informações** → **Executar assim mesmo**.',
+                '- **Versão nova:** baixe e rode o instalador da release mais recente por cima; os dados continuam.',
+                '',
+                'Durante o pomodoro, o app lê só o **título da janela ativa** e o **nome do programa**. Nada de teclas, imagens da tela ou URL, e tudo fica só no seu computador.',
+              ].join('\n'),
+            })
+            return data.id
+
+  instaladores:
+    name: Instalador (Windows)
+    needs: criar-release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - run: npm ci
+
+      - name: Testes do Rust
+        run: cargo test --manifest-path src-tauri/Cargo.toml
+
+      # Compila e sobe o instalador NSIS na release criada acima.
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          releaseId: ${{ needs.criar-release.outputs.id }}
+
+  publicar:
+    name: Publicar release
+    needs: [criar-release, instaladores]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.repos.updateRelease({
+              ...context.repo,
+              release_id: Number('${{ needs.criar-release.outputs.id }}'),
+              draft: false,
+              make_latest: 'true',
+            })

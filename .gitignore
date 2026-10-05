@@ -1,0 +1,10 @@
+node_modules
+dist
+*.local
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea
+.claude/
+src-tauri/target
+src-tauri/gen

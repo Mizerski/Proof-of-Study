@@ -1,0 +1,347 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+/* Outfit (geométrica, herdeira da Futura) nos títulos; Inter nos textos e tabelas, pelos algarismos tabulares. */
+@import "@fontsource-variable/inter/opsz.css";
+@import "@fontsource-variable/outfit/wght.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+    --font-heading: 'Outfit Variable', 'Futura', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --color-foco: var(--foco);
+    --color-foco-suave: var(--foco-suave);
+    --color-fora: var(--fora);
+    --color-fora-suave: var(--fora-suave);
+    --color-banco: var(--banco);
+    --color-banco-suave: var(--banco-suave);
+    --color-vermelho: var(--vermelho);
+    --color-azul: var(--azul);
+    --color-amarelo: var(--amarelo);
+    --color-papel: var(--papel);
+    --color-tinta: var(--tinta);
+    --color-sobre-bloco: var(--sobre-bloco);
+    --color-contorno: var(--contorno);
+    --color-veu: var(--veu);
+    --color-sombra: var(--sombra);
+    --color-selecao: var(--selecao);
+    --color-selecao-forte: var(--selecao-forte);
+    /* Sombras duras, sem desfoque: o bloco parece recortado e colado sobre o papel. A cor vem de `--sombra`. */
+    --shadow-bloco-sm: 3px 3px 0 0 var(--sombra);
+    --shadow-bloco: 4px 4px 0 0 var(--sombra);
+    --shadow-bloco-lg: 6px 6px 0 0 var(--sombra);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /*
+     * Bauhaus: papel claro, preto para a estrutura e as três primárias (vermelho, azul, amarelo).
+     * A cor fala de tempo (foco azul, fora do foco vermelho, banco de horas amarelo); o preto organiza a tela.
+     */
+    --background: oklch(0.955 0.007 90);
+    --foreground: oklch(0.2 0.006 80);
+    --card: oklch(0.99 0.003 90);
+    --card-foreground: oklch(0.2 0.006 80);
+    --popover: oklch(0.99 0.003 90);
+    --popover-foreground: oklch(0.2 0.006 80);
+    --primary: oklch(0.2 0.006 80);
+    --primary-foreground: oklch(0.99 0.003 90);
+    --secondary: oklch(0.915 0.008 90);
+    --secondary-foreground: oklch(0.2 0.006 80);
+    --muted: oklch(0.915 0.008 90);
+    --muted-foreground: oklch(0.43 0.01 80);
+    --accent: oklch(0.915 0.008 90);
+    --accent-foreground: oklch(0.2 0.006 80);
+    --destructive: oklch(0.52 0.19 27);
+    /* Divisórias finas; os contornos fortes usam `border-foreground`. */
+    --border: oklch(0.86 0.008 90);
+    --input: oklch(0.2 0.006 80);
+    --ring: oklch(0.5 0.16 258);
+    --chart-1: oklch(0.57 0.2 27);
+    --chart-2: oklch(0.45 0.2 264);
+    --chart-3: oklch(0.83 0.16 88);
+    --chart-4: oklch(0.2 0.006 80);
+    --chart-5: oklch(0.68 0.01 80);
+    --radius: 0rem;
+
+    /* As três primárias, para formas e blocos de cor (nunca para texto sobre o papel, fora o azul e o vermelho). */
+    --vermelho: oklch(0.58 0.19 29);
+    --azul: oklch(0.5 0.15 258);
+    --amarelo: oklch(0.86 0.16 92);
+    /* Papel puro, para texto sobre os blocos de cor. */
+    --papel: oklch(0.99 0.003 90);
+    /* Texto e formas sobre os blocos azul e vermelho: o papel no claro; no escuro, tinta (as primárias ficam claras). */
+    --sobre-bloco: oklch(0.99 0.003 90);
+    /* Tinta: o preto quente, igual nos dois temas. Texto sobre o amarelo e blocos pretos decorativos. */
+    --tinta: oklch(0.2 0.006 80);
+    /* Contornos, réguas e linhas estruturais (cards, campos, cabeçalhos de tabela, eixos e contorno dos gráficos). */
+    --contorno: oklch(0.2 0.006 80);
+    /* Cor da sombra dura dos blocos. */
+    --sombra: oklch(0.2 0.006 80);
+    /* Véu amarelo de linha selecionada e destaque de período; o forte é o hover sobre ele. */
+    --selecao: color-mix(in oklch, var(--amarelo) 30%, transparent);
+    --selecao-forte: color-mix(in oklch, var(--amarelo) 40%, transparent);
+    /* Véu atrás de dialogs: escurece a página (no escuro, um véu claro deixaria tudo cinza). */
+    --veu: color-mix(in oklch, var(--foreground) 35%, transparent);
+
+    /* Tempo: foco em azul, fora do foco em vermelho, banco de horas em amarelo (ocre no texto). */
+    --foco: oklch(0.45 0.15 258);
+    --foco-suave: oklch(0.94 0.03 258);
+    --fora: oklch(0.5 0.18 29);
+    --fora-suave: oklch(0.94 0.035 29);
+    /* Banco de horas (metas): amarelo; o texto é um ocre escuro para ter contraste sobre o papel. */
+    --banco: oklch(0.48 0.1 80);
+    --banco-suave: oklch(0.95 0.06 95);
+    /* Pontos do papel milimetrado do fundo. */
+    --ponto: oklch(0.2 0.006 80 / 0.16);
+
+    --sidebar: oklch(0.992 0.003 90);
+    --sidebar-foreground: oklch(0.2 0.006 80);
+    --sidebar-primary: oklch(0.2 0.006 80);
+    --sidebar-primary-foreground: oklch(0.992 0.003 90);
+    --sidebar-accent: oklch(0.925 0.008 90);
+    --sidebar-accent-foreground: oklch(0.2 0.006 80);
+    --sidebar-border: oklch(0.85 0.008 90);
+    --sidebar-ring: oklch(0.45 0.2 264);
+    /* Cursores e setas da barra de rolagem em pixel art (ponto de clique em px da imagem 1x). */
+    --cursor-seta: image-set(url("/cursores/seta.svg") 1x, url("/cursores/seta@2x.svg") 2x) 1 1, default;
+    --cursor-mao: image-set(url("/cursores/mao.svg") 1x, url("/cursores/mao@2x.svg") 2x) 9 1, pointer;
+    --cursor-texto: image-set(url("/cursores/texto.svg") 1x, url("/cursores/texto@2x.svg") 2x) 7 16, text;
+    --cursor-bloqueado: image-set(url("/cursores/bloqueado.svg") 1x, url("/cursores/bloqueado@2x.svg") 2x) 12 12, not-allowed;
+    --seta-cima: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%25231d1b18' d='M3 0h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM5 3h1v1h-1zM6 3h1v1h-1z'/%3E%3C/svg%3E");
+    --seta-baixo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%25231d1b18' d='M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM3 3h1v1h-1z'/%3E%3C/svg%3E");
+    --seta-esquerda: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%25231d1b18' d='M3 0h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM2 5h1v1h-1zM3 5h1v1h-1zM3 6h1v1h-1z'/%3E%3C/svg%3E");
+    --seta-direita: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%25231d1b18' d='M0 0h1v1h-1zM0 1h1v1h-1zM1 1h1v1h-1zM0 2h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM0 4h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM0 5h1v1h-1zM1 5h1v1h-1zM0 6h1v1h-1z'/%3E%3C/svg%3E");
+}
+
+/*
+ * Bauhaus escuro, "grafite médio": papel cinza-grafite em vez de preto, para o preto continuar organizando a tela.
+ * Não é a inversão do claro; cada cor tem a sua variante. Medidas e motivos no design system do finance-sheet do finance-sheet.
+ * - Chão e superfícies quase neutros (H 80, C ≤ 0.005), em degraus de L: chão 0.295, card 0.33, área neutra 0.37.
+ * - Texto quase branco e sem amarelar (11,4:1 no card); secundário a 6,5:1.
+ * - Contorno e réguas pretos, como no claro (papel recortado). Campos ganham contorno cinza (`--input`, 4,4:1).
+ * - Sombra dura em azul-tinta escuro, mais macia que o contorno (1,2:1 contra 1,6:1).
+ * - Primárias de pigmento, apagadas e próximas em luz (L 0.60–0.75): o amarelo não manda mais na tela.
+ *   Texto sobre azul e vermelho é escuro (`--sobre-bloco`), como cartaz impresso.
+ * - Fundos suaves quase neutros; a cor fica no texto e nos blocos.
+ */
+.dark {
+    color-scheme: dark;
+
+    /* Chão e superfícies */
+    --background: oklch(0.295 0.004 80);
+    --card: oklch(0.33 0.004 80);
+    --popover: oklch(0.33 0.004 80);
+    --muted: oklch(0.37 0.004 80);
+    --secondary: oklch(0.37 0.005 80);
+    --accent: oklch(0.37 0.005 80);
+
+    /* Texto */
+    --foreground: oklch(0.975 0.003 85);
+    --card-foreground: oklch(0.975 0.003 85);
+    --popover-foreground: oklch(0.975 0.003 85);
+    --secondary-foreground: oklch(0.975 0.003 85);
+    --accent-foreground: oklch(0.975 0.003 85);
+    --muted-foreground: oklch(0.8 0.004 80);
+    --primary: oklch(0.14 0.004 80);
+    --primary-foreground: oklch(0.975 0.003 85);
+
+    /* Estrutura e sombra */
+    --contorno: oklch(0.14 0.004 80);
+    --input: oklch(0.69 0.005 80);
+    --border: oklch(0.235 0.004 80);
+    --sombra: oklch(0.235 0.03 262);
+    --ring: oklch(0.78 0.1 258);
+    --tinta: oklch(0.16 0.004 80);
+    --sobre-bloco: oklch(0.16 0.004 80);
+    --selecao: color-mix(in oklch, var(--amarelo) 20%, transparent);
+    --selecao-forte: color-mix(in oklch, var(--amarelo) 28%, transparent);
+    --veu: oklch(0.12 0.004 80 / 60%);
+
+    /* Primárias (blocos, formas, faixas) */
+    --vermelho: oklch(0.62 0.145 30);
+    --azul: oklch(0.6 0.115 258);
+    --amarelo: oklch(0.75 0.12 84);
+    --destructive: oklch(0.75 0.12 27);
+
+    /* Tempo: cor no texto, fundo quase neutro */
+    --foco: oklch(0.8 0.09 258);
+    --foco-suave: oklch(0.36 0.01 258);
+    --fora: oklch(0.79 0.1 30);
+    --fora-suave: oklch(0.36 0.01 30);
+    --banco: oklch(0.84 0.1 84);
+    --banco-suave: oklch(0.36 0.008 84);
+    --ponto: oklch(0.14 0.004 80 / 0.55);
+    --chart-1: oklch(0.62 0.145 30);
+    --chart-2: oklch(0.6 0.115 258);
+    --chart-3: oklch(0.75 0.12 84);
+    --chart-4: oklch(0.975 0.003 85);
+    --chart-5: oklch(0.6 0.004 80);
+
+    --sidebar: oklch(0.33 0.004 80);
+    --sidebar-foreground: oklch(0.975 0.003 85);
+    --sidebar-primary: oklch(0.975 0.003 85);
+    --sidebar-primary-foreground: oklch(0.295 0.004 80);
+    --sidebar-accent: oklch(0.37 0.005 80);
+    --sidebar-accent-foreground: oklch(0.975 0.003 85);
+    --sidebar-border: oklch(0.235 0.004 80);
+    --sidebar-ring: oklch(0.78 0.1 258);
+    --seta-cima: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%2523f6f5f2' d='M3 0h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM5 3h1v1h-1zM6 3h1v1h-1z'/%3E%3C/svg%3E");
+    --seta-baixo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%2523f6f5f2' d='M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM3 3h1v1h-1z'/%3E%3C/svg%3E");
+    --seta-esquerda: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%2523f6f5f2' d='M3 0h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM2 5h1v1h-1zM3 5h1v1h-1zM3 6h1v1h-1z'/%3E%3C/svg%3E");
+    --seta-direita: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%2523f6f5f2' d='M0 0h1v1h-1zM0 1h1v1h-1zM1 1h1v1h-1zM0 2h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM0 4h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM0 5h1v1h-1zM1 5h1v1h-1zM0 6h1v1h-1z'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground antialiased;
+    /* Inter: 1 com base e l com cauda, para não confundir 1, l e I em valores e nomes. */
+    font-feature-settings: "cv01", "cv05";
+    }
+  html {
+    @apply font-sans;
+    font-optical-sizing: auto;
+    }
+  h1, h2, h3 {
+    text-wrap: balance;
+    }
+  ::selection {
+    background-color: var(--amarelo);
+    color: var(--tinta);
+    }
+  /* Cursores em pixel art (public/cursores, desenhados em grade de 2px; @2x para telas com escala). */
+  html {
+    cursor: var(--cursor-seta);
+    }
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"]), textarea, [contenteditable="true"] {
+    cursor: var(--cursor-texto);
+    }
+  /* O Tailwind 4 tira o cursor de mão dos botões; tudo que é clicável volta a mostrá-lo. */
+  button:not(:disabled), [role="button"]:not([aria-disabled="true"]), summary, a[href] {
+    cursor: var(--cursor-mao);
+    }
+  /* Barra de rolagem em bloco: trilho neutro com régua preta, puxador quadrado que fica amarelo no hover. */
+  ::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+    }
+  ::-webkit-scrollbar-track {
+    background: var(--muted);
+    }
+  ::-webkit-scrollbar-track:vertical {
+    border-left: 2px solid var(--contorno);
+    }
+  ::-webkit-scrollbar-track:horizontal {
+    border-top: 2px solid var(--contorno);
+    }
+  /* O puxador é controle: usa --input (preto no claro, cinza a 4,4:1 no escuro), como os campos. */
+  ::-webkit-scrollbar-thumb {
+    background: var(--input);
+    border: 3px solid var(--muted);
+    }
+  ::-webkit-scrollbar-thumb:vertical {
+    border-left-width: 5px;
+    }
+  ::-webkit-scrollbar-thumb:horizontal {
+    border-top-width: 5px;
+    }
+  ::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-thumb:active {
+    background: var(--amarelo);
+    }
+  ::-webkit-scrollbar-corner {
+    background: var(--muted);
+    }
+  ::-webkit-scrollbar-button:single-button {
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-color: var(--card);
+    background-repeat: no-repeat;
+    background-position: center;
+    }
+  ::-webkit-scrollbar-button:single-button:hover {
+    background-color: var(--amarelo);
+    }
+  ::-webkit-scrollbar-button:single-button:vertical {
+    border-left: 2px solid var(--contorno);
+    }
+  ::-webkit-scrollbar-button:single-button:horizontal {
+    border-top: 2px solid var(--contorno);
+    }
+  ::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: var(--seta-cima);
+    border-bottom: 2px solid var(--contorno);
+    }
+  ::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: var(--seta-baixo);
+    border-top: 2px solid var(--contorno);
+    }
+  ::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: var(--seta-esquerda);
+    border-right: 2px solid var(--contorno);
+    }
+  ::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: var(--seta-direita);
+    border-left: 2px solid var(--contorno);
+    }
+}
+/* Fora das camadas para valer também sobre as classes de cursor do Tailwind. */
+.cursor-pointer {
+  cursor: var(--cursor-mao);
+}
+.cursor-default {
+  cursor: var(--cursor-seta);
+}
+:disabled, [aria-disabled="true"], .cursor-not-allowed {
+  cursor: var(--cursor-bloqueado);
+}
+/* Grade de pontos do papel, como papel milimetrado (fundo do app). */
+.papel-pontilhado {
+  background-image: radial-gradient(var(--ponto) 1px, transparent 1.6px);
+  background-size: 16px 16px;
+}
+/* Faixa listrada: tempo sem registro e áreas para soltar arquivos. */
+.listrado {
+  background-image: repeating-linear-gradient(135deg, var(--muted) 0 4px, var(--card) 4px 8px);
+}

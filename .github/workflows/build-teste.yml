@@ -1,0 +1,54 @@
+# Build de teste do app desktop: gera o instalador do Windows a cada push numa branch feature/**
+# e o guarda como artefato da execução (Actions → a execução → Artifacts), para testar antes do merge.
+# Não cria tag nem release; para publicar uma versão, use a tag (release.yml).
+
+name: Build de teste (desktop)
+
+on:
+  push:
+    branches: ['feature/**']
+  # Também dá para rodar à mão, em qualquer branch, pela aba Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Um push novo na mesma branch cancela o build anterior, que ficou desatualizado.
+concurrency:
+  group: build-teste-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: Instalador (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - name: Testes do Rust
+        run: cargo test --manifest-path src-tauri/Cargo.toml
+
+      # O Tauri roda antes o "npm run build" (typecheck + Vite), definido em beforeBuildCommand.
+      - run: npm run desktop:build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instalador-windows-${{ github.run_number }}
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error
+          retention-days: 14
