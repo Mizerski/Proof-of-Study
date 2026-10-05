@@ -18,7 +18,24 @@ export function regraQueCasa(regras: Regra[], titulo: string, processo: string):
   return ordenarRegras(regras).find((r) => casa(r, titulo, processo))
 }
 
-const NAVEGADORES = new Set(['chrome', 'msedge', 'firefox', 'brave', 'opera', 'vivaldi', 'arc', 'zen'])
+/** Nomes do Windows (executável) e do Linux (classe da janela, ex.: `Google-chrome`). */
+const NAVEGADORES = new Set([
+  'chrome',
+  'msedge',
+  'firefox',
+  'brave',
+  'opera',
+  'vivaldi',
+  'arc',
+  'zen',
+  'google-chrome',
+  'chromium',
+  'chromium-browser',
+  'brave-browser',
+  'microsoft-edge',
+  'firefox-esr',
+  'librewolf',
+])
 
 const NOMES_PROGRAMAS: Record<string, string> = {
   chrome: 'Chrome',
@@ -49,6 +66,20 @@ const NOMES_PROGRAMAS: Record<string, string> = {
   slack: 'Slack',
   steam: 'Steam',
   lockapp: 'Tela de bloqueio',
+  // Linux: classe da janela.
+  'google-chrome': 'Chrome',
+  chromium: 'Chromium',
+  'chromium-browser': 'Chromium',
+  'brave-browser': 'Brave',
+  'microsoft-edge': 'Edge',
+  'jetbrains-idea': 'IntelliJ',
+  'gnome-terminal-server': 'Terminal',
+  'org.gnome.ptyxis': 'Terminal',
+  konsole: 'Konsole',
+  'org.gnome.nautilus': 'Arquivos',
+  dolphin: 'Dolphin',
+  'org.gnome.evince': 'Visualizador de documentos',
+  okular: 'Okular',
 }
 
 export function nomeDoPrograma(processo: string): string {
@@ -59,7 +90,7 @@ export function nomeDoPrograma(processo: string): string {
 export const ehNavegador = (processo: string) => NAVEGADORES.has(processo.toLowerCase())
 
 /** " - Google Chrome", " — Mozilla Firefox", " - Microsoft Edge" (o Edge põe um espaço invisível antes de Edge). */
-const SUFIXO_NAVEGADOR = /\s[-—–]\s(?:google chrome|mozilla firefox|microsoft​?\s?edge|brave|opera|vivaldi)$/i
+const SUFIXO_NAVEGADOR = /\s[-—–]\s(?:google chrome|mozilla firefox|microsoft​?\s?edge|chromium|brave|opera|vivaldi)$/i
 
 /** O site, pelo título da aba: o último pedaço depois de " - " ("Caixa de entrada - Gmail" → "Gmail"). */
 export function siteDoTitulo(titulo: string): string {

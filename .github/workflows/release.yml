@@ -1,4 +1,4 @@
-# Gera o instalador do app desktop (Windows) e publica numa Release do GitHub.
+# Gera os instaladores do app desktop (Windows e Linux) e publica numa Release do GitHub.
 # Dispara ao enviar uma tag de versão: git tag v0.2.0 && git push origin v0.2.0
 # A tag precisa ser igual à versão do package.json (com "v" na frente).
 
@@ -52,11 +52,20 @@ jobs:
               body: [
                 '## Como instalar',
                 '',
-                'Baixe o instalador do Windows em **Assets**, logo abaixo. Não precisa compilar nada.',
+                'Baixe o arquivo do seu sistema em **Assets**, logo abaixo. Não precisa compilar nada.',
+                '',
+                '### Windows',
                 '',
                 '- **Instalador:** o arquivo terminado em `_x64-setup.exe`.',
                 '- **Aviso do SmartScreen:** o instalador não é assinado, então o Windows pode avisar na primeira vez. Clique em **Mais informações** → **Executar assim mesmo**.',
                 '- **Versão nova:** baixe e rode o instalador da release mais recente por cima; os dados continuam.',
+                '',
+                '### Linux',
+                '',
+                '- **Ubuntu, Debian, Mint:** o `.deb` (`sudo apt install ./arquivo.deb`).',
+                '- **Fedora, openSUSE:** o `.rpm` (`sudo dnf install ./arquivo.rpm`).',
+                '- **Outras distros:** o `.AppImage` (`chmod +x` e abrir).',
+                '- **Wayland:** a janela ativa só é lida em apps do XWayland. Para o registro completo, entre na sessão **X11** ("GNOME em Xorg", "Plasma (X11)").',
                 '',
                 'Durante o pomodoro, o app lê só o **título da janela ativa** e o **nome do programa**. Nada de teclas, imagens da tela ou URL, e tudo fica só no seu computador.',
               ].join('\n'),
@@ -64,11 +73,28 @@ jobs:
             return data.id
 
   instaladores:
-    name: Instalador (Windows)
+    name: Instalador (${{ matrix.nome }})
     needs: criar-release
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nome: Windows
+            os: windows-latest
+            pacotes: nsis
+          # 22.04 para o AppImage rodar também em distros mais antigas (glibc).
+          - nome: Linux
+            os: ubuntu-22.04
+            pacotes: deb,rpm,appimage
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
+
+      - name: Dependências do Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
 
       - uses: actions/setup-node@v5
         with:
@@ -86,12 +112,13 @@ jobs:
       - name: Testes do Rust
         run: cargo test --manifest-path src-tauri/Cargo.toml
 
-      # Compila e sobe o instalador NSIS na release criada acima.
+      # Compila e sobe os instaladores na release criada acima.
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ needs.criar-release.outputs.id }}
+          args: --bundles ${{ matrix.pacotes }}
 
   publicar:
     name: Publicar release

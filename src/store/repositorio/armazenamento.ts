@@ -1,7 +1,7 @@
 import { load, type Store } from '@tauri-apps/plugin-store'
 import { atualizarDados, VERSAO_DADOS, type Dados } from '../model/dados'
 
-/** Tudo num JSON na pasta de dados do app (`%APPDATA%\io.github.mizerski.proofofstudy`). Imagens ficam à parte. */
+/** Tudo num JSON na pasta de dados do app (`%APPDATA%\io.github.mizerski.proofofstudy` no Windows, `~/.local/share/...` no Linux). Imagens ficam à parte. */
 export const ARQUIVO_DADOS = 'dados.json'
 
 let arquivo: Promise<Store> | undefined

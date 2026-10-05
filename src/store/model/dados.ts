@@ -140,12 +140,16 @@ const titulo = (rotulo: string, termos: string[], tipo: Tipo): Regra => ({
 export function regrasPadrao(): Regra[] {
   return [
     app('VS Code', ['code', 'cursor'], 'estudo'),
-    app('IntelliJ', ['idea64', 'pycharm64', 'webstorm64'], 'estudo'),
-    app('Terminal', ['windowsterminal', 'powershell', 'cmd'], 'estudo'),
+    app('IntelliJ', ['idea64', 'pycharm64', 'webstorm64', 'jetbrains'], 'estudo'),
+    app(
+      'Terminal',
+      ['windowsterminal', 'powershell', 'cmd', 'gnome-terminal', 'ptyxis', 'konsole', 'kitty', 'alacritty', 'wezterm', 'xterm', 'tilix'],
+      'estudo',
+    ),
     app('Anki', ['anki'], 'estudo'),
     app('Notion', ['notion'], 'estudo'),
     app('Obsidian', ['obsidian'], 'estudo'),
-    app('Leitor de PDF', ['acrobat', 'acrord32', 'sumatrapdf'], 'estudo'),
+    app('Leitor de PDF', ['acrobat', 'acrord32', 'sumatrapdf', 'evince', 'okular', 'zathura', 'papers'], 'estudo'),
     titulo('Documentação e dicionários', ['mdn', 'stack overflow', 'cambridge', 'duolingo', 'github', 'docs'], 'estudo'),
     titulo('ChatGPT e Claude', ['chatgpt', 'claude'], 'estudo'),
     titulo('YouTube', ['youtube'], 'fora'),
@@ -156,7 +160,7 @@ export function regrasPadrao(): Regra[] {
     app('Steam', ['steam', 'epicgameslauncher'], 'fora'),
     titulo('Jogos', ['league of legends', 'valorant', 'minecraft', 'roblox', 'fortnite', 'counter-strike'], 'fora'),
     app('Spotify', ['spotify'], 'ignorar'),
-    app('Explorador de arquivos', ['explorer'], 'ignorar'),
+    app('Explorador de arquivos', ['explorer', 'nautilus', 'dolphin', 'thunar', 'nemo'], 'ignorar'),
   ]
 }
 

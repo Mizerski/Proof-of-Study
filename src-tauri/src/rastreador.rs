@@ -1,4 +1,4 @@
-//! O pomodoro e o registro das janelas. Fica no Rust porque o WebView do Windows suspende os timers
+//! O pomodoro e o registro das janelas. Fica no Rust porque o WebView (no Windows e no Linux) suspende os timers
 //! quando a janela do app está escondida: o relógio, o fim da sessão e o aviso de distração precisam
 //! continuar funcionando com o app na bandeja ou como widget.
 //!

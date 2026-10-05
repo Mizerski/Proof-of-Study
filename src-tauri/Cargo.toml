@@ -1,6 +1,6 @@
 [package]
 name = "proof-of-study"
-version = "0.1.0"
+version = "0.3.0"
 description = "Banco de horas de estudo com pomodoro que registra o foco"
 authors = ["Mizerski"]
 license = ""
@@ -35,3 +35,7 @@ windows-sys = { version = "0.61", features = [
   "Win32_UI_Input_KeyboardAndMouse",
   "Win32_UI_WindowsAndMessaging",
 ] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+# Janela ativa e tempo sem uso pelo X11 (Rust puro, sem libX11). A extensão screensaver dá o tempo sem uso.
+x11rb = { version = "0.13", features = ["screensaver"] }

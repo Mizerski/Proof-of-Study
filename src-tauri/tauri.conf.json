@@ -33,7 +33,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis"],
+    "targets": ["nsis", "deb", "rpm", "appimage"],
     "publisher": "Mizerski",
     "category": "Education",
     "shortDescription": "Banco de horas de estudo com pomodoro que registra o foco",

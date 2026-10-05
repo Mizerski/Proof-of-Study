@@ -1,4 +1,4 @@
-# Build de teste do app desktop: gera o instalador do Windows a cada push numa branch feature/**
+# Build de teste do app desktop: gera os instaladores do Windows e do Linux a cada push numa branch feature/**
 # e o guarda como artefato da execução (Actions → a execução → Artifacts), para testar antes do merge.
 # Não cria tag nem release; para publicar uma versão, use a tag (release.yml).
 
@@ -19,11 +19,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  windows:
-    name: Instalador (Windows)
-    runs-on: windows-latest
+  instalador:
+    name: Instalador (${{ matrix.nome }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nome: Windows
+            os: windows-latest
+            pacotes: nsis
+            arquivos: src-tauri/target/release/bundle/nsis/*-setup.exe
+          # 22.04 para o AppImage rodar também em distros mais antigas (glibc).
+          - nome: Linux
+            os: ubuntu-22.04
+            pacotes: deb,rpm,appimage
+            arquivos: |
+              src-tauri/target/release/bundle/deb/*.deb
+              src-tauri/target/release/bundle/rpm/*.rpm
+              src-tauri/target/release/bundle/appimage/*.AppImage
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
+
+      - name: Dependências do Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
 
       - uses: actions/setup-node@v5
         with:
@@ -44,11 +66,11 @@ jobs:
         run: cargo test --manifest-path src-tauri/Cargo.toml
 
       # O Tauri roda antes o "npm run build" (typecheck + Vite), definido em beforeBuildCommand.
-      - run: npm run desktop:build
+      - run: npm run desktop:build -- --bundles ${{ matrix.pacotes }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: instalador-windows-${{ github.run_number }}
-          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          name: instalador-${{ runner.os }}-${{ github.run_number }}
+          path: ${{ matrix.arquivos }}
           if-no-files-found: error
           retention-days: 14

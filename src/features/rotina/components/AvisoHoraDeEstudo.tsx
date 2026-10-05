@@ -15,7 +15,7 @@ const ADIAR_MS = 10 * 60_000
 
 /**
  * "Hora do estudo": aparece dentro do app enquanto um bloco de estudo da rotina está acontecendo e não há
- * pomodoro. Fecha por hoje no ✕ ou volta em 10 min. (Com o app escondido, quem avisa é a notificação do Windows.)
+ * pomodoro. Fecha por hoje no ✕ ou volta em 10 min. (Com o app escondido, quem avisa é a notificação do sistema.)
  */
 export function AvisoHoraDeEstudo() {
   const { dados } = useDados()
